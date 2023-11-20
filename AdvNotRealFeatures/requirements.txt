@@ -1,0 +1,9 @@
+torch 
+torchvision
+numpy
+kornia
+argparse
+tqdm
+einops
+timm
+
