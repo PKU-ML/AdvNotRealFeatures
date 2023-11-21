@@ -48,10 +48,10 @@ In this paper, we generalize the definition of feature usefulness and robustness
     - Model is defaulted to DDPM with UNet
     - See ./DM/train_cm.py for more details
 
-- Visualize
+- Transfer
     - Implementation of the study of paradigm-wise transferability of non-robust features
-    - Place the SimCLR.pt and SimCLR_Classifier.pt downloaded from the [link](https://drive.google.com/drive/folders/11IQ9AvKV22RGffJcEyJdoiS1i1enW__0?usp=drive_link)
-    - Enjoy the experiments with the notebook
+    - Place the SimCLR.pt and SimCLR_Classifier.pt downloaded from the [link](https://drive.google.com/drive/folders/11IQ9AvKV22RGffJcEyJdoiS1i1enW__0?usp=drive_link) into this folder
+    - Enjoy experimenting with the notebook
 
 - Robust 
     - Implementation of the Valina Adversarial Training Algorithm and PGD, AA attacks
