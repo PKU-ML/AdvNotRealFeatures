@@ -8,6 +8,7 @@ from tqdm import tqdm
 from torch.utils.data import DataLoader
 import numpy as np
 from dataset import *
+from autoattack import AutoAttack
 
 parser = ArgumentParser()
 parser.add_argument('--dataset', type=str, default='cifar10', choices=['cifar10', 'robust-cifar10', 'non-robust-cifar10'])
@@ -20,6 +21,7 @@ parser.add_argument('--epochs', type=int, default=1000)
 parser.add_argument('--local_rank', type=int, default=0)
 parser.add_argument('--n_views', type=int, default=2)
 parser.add_argument('--temperature', type=float, default=0.007)
+parser.add_argument('--save', type=str, default='')
 
 args = parser.parse_args()
 
@@ -118,7 +120,8 @@ def train_classifier(backbone):
     test_loader = DataLoader(test_set, shuffle=False, batch_size=512, num_workers=8)
 
     # Change to probing head
-    backbone.linear = torch.nn.Linear(backbone.linear.in_features, 10)
+    
+    backbone.linear = torch.nn.Linear(backbone.linear[0].in_features, 10).cuda()
     for param in backbone.parameters():
         param.requires_grad = False
     for param in backbone.linear.parameters():
@@ -129,6 +132,7 @@ def train_classifier(backbone):
     criterion = torch.nn.CrossEntropyLoss()
 
     for epoch in range(0, 30):
+        backbone.train()
         for data, labels in train_loader:
             data = data.cuda()
             labels = labels.cuda()
@@ -142,21 +146,27 @@ def train_classifier(backbone):
             optimizer.step()
         
         correct = 0
+        backbone.eval()
         for data, labels in test_loader:
             data = data.cuda()
             labels = labels.cuda()
             logits = backbone(data)
+            correct += (logits.argmax(axis=1) == labels).sum()
+            
             
         scheduler.step()
         test_acc = correct/10000
         print(f'CL, epoch {epoch}, Dataset = {args.dataset}, Acc = {test_acc}')
+    
+    if args.save:
+        torch.save(backbone, args.save)
     
     return test_acc
     
 if __name__ == "__main__":
     print(f'Start training CL on dataset {args.dataset}')
     backbone = main()
-    test_acc = train_classifier(backbone)
+    test_acc = train_classifier(backbone.model.backbone.cuda())
     if not os.path.exists('./log.txt'):
         open('./log.txt', 'w')
     with open('log.txt', 'a') as f:
