@@ -5,7 +5,7 @@ This repository contains the official code to reproduce the main results from th
 In this paper, we generalize the definition of feature usefulness and robustness to multiple paradigms. This repository thus contains the code of four paradigms considered in the paper, CL (Contrastive Learning), DM (Diffusion Model), MIM (Masked Image Modeling), and SL (Supervised Learning), as subfolders. 
 
 ### Requirements
-- Basically, we run with PyTorch==1.8.1 and Python==3.8
+- Basically, we run with PyTorch==1.13 and Python==3.8
 - To build the environment:
 
 ```
