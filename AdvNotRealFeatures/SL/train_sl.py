@@ -27,7 +27,7 @@ transform_test = transforms.Compose([
 train_set = CIFAR10('../data', train=True, transform=transform_train, download=True)
 test_set = CIFAR10('../data', train=False, transform=transform_test, download=True)
 if 'robust' in args.dataset:
-    train_set = Crafted_CIFAR10_Training_Set(None, args.dataset)
+    train_set = Crafted_CIFAR10_Training_Set(transform_train, args.dataset) # Use aug
 train_loader = DataLoader(train_set, shuffle=False, batch_size=512, num_workers=8)
 test_loader = DataLoader(test_set, shuffle=False, batch_size=512, num_workers=8)
     
