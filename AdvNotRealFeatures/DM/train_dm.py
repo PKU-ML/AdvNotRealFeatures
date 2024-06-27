@@ -96,7 +96,12 @@ def train(rank=0, args=None, temp_dir=""):
 
     if 'robust' in args.dataset:
         trainloader.dataset = Crafted_CIFAR10_Training_Set(trainloader.dataset.transform, args.dataset)
-
+    
+    # Change to the below code if report error for line 97
+    # if 'robust' in args.dataset:
+    #     train_dataset = Crafted_CIFAR10_Training_Set(trainloader.dataset.transform, args.dataset)
+    #     trainloader = DataLoader(train_dataset, batch_size=train_configs.batch_size, shuffle=True, num_workers=num_workers)
+    
     chkpt_dir = args.chkpt_dir
     chkpt_path = os.path.join(chkpt_dir, args.chkpt_name or f"ddpm_{dataset}.pt")
     chkpt_intv = args.chkpt_intv
@@ -168,6 +173,14 @@ def train(rank=0, args=None, temp_dir=""):
     test_set = torchvision.datasets.CIFAR10('../data', train=False, transform=transform_test, download=True)
     if 'robust' in args.dataset:
         train_set = Crafted_CIFAR10_Training_Set(transform_train, args.dataset)
+
+    # Change to the below code if report error in line 174
+    # if 'robust' in args.dataset:
+    #     train_set = Crafted_CIFAR10_Training_Set(transform_train, args.dataset)
+    # else:
+    #     train_set = torchvision.datasets.CIFAR10('../data', train=True, transform=transform_train, download=True)
+
+    
     train_loader = DataLoader(train_set, shuffle=False, batch_size=512, num_workers=8)
     test_loader = DataLoader(test_set, shuffle=False, batch_size=512, num_workers=8)
     cls_model = Diffusion_Classifier(diffusion, model)
